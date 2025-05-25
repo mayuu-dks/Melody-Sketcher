@@ -1,20 +1,18 @@
-import type {NextConfig} from 'next';
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  output: 'export', // Enable static HTML export
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  images: {
-    unoptimized: true, // Disable Next.js image optimization for static export
-  },
-  // If deploying to a subdirectory like <username>.github.io/<repository-name>
-  // You might need to uncomment and set basePath and assetPrefix:
-  // basePath: '/<Melody-Sketcher>',
-  // assetPrefix: '/<Melody-Sketcher>/',
+  // ① static export を ON
+  output: 'export',
+
+  // ② GitHub Pages の URL が
+  //    https://<ユーザ名>.github.io/Melody-Sketcher/
+  //    の場合は basePath/assetPrefix を設定
+  basePath: '/Melody-Sketcher',
+  assetPrefix: '/Melody-Sketcher/',
+
+  typescript: { ignoreBuildErrors: true },
+  eslint:    { ignoreDuringBuilds: true },
+  images:    { unoptimized: true },
 };
 
 export default nextConfig;
