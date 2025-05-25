@@ -13,8 +13,8 @@ const nextConfig: NextConfig = {
   },
   // If deploying to a subdirectory like <username>.github.io/<repository-name>
   // You might need to uncomment and set basePath and assetPrefix:
-  // basePath: '/<repository-name>',
-  // assetPrefix: '/<repository-name>/',
+  // basePath: '/<Melody-Sketcher>',
+  // assetPrefix: '/<Melody-Sketcher>/',
 };
 
 export default nextConfig;
