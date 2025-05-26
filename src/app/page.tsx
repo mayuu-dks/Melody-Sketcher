@@ -29,7 +29,7 @@ export default function MelodySketcherPage() {
     stopMetronome,
   } = useMidiPlayer();
 // フェールバック用ビープ音を用意
- const fallbackBeep = useRef<HTMLAudioElement>();
+  const fallbackBeep = useRef<HTMLAudioElement | null>(null);
 
   const [selectedKey, setSelectedKey] = useState<KeyItem>(DEFAULT_KEY);
   const [selectedScale, setSelectedScale] = useState<ScaleItem>(DEFAULT_SCALE);
@@ -295,14 +295,7 @@ export default function MelodySketcherPage() {
       </header>
 
       <main className="w-full max-w-5xl xl:max-w-7xl space-y-4 md:space-y-6">
- {/* フェールバック用ビープ音を先読み */}
-    <audio
-      ref={fallbackBeep}
-      src="beep.wav"
-      preload="auto"
-      style={{ display: "none" }}
-    />
-   
+
         {!isClient ? (
           <div className="flex justify-center items-center h-64">
             <p className="text-muted-foreground">Loading Melody Sketcher...</p>
