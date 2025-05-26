@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { VirtualKeyboard } from '@/components/virtual-keyboard';
 import { ControlPanel } from '@/components/control-panel';
 import { PianoRollEditor } from '@/components/piano-roll-editor';
@@ -28,7 +28,13 @@ export default function MelodySketcherPage() {
     startMetronome,
     stopMetronome,
   } = useMidiPlayer();
-
+// フェールバック用ビープ音を用意
+ const fallbackBeep = useRef<HTMLAudioElement>();
+ useEffect(() => {
+   const audio = new Audio('/beep.wav');  // public フォルダ直下に配置しておく
+   audio.preload = 'auto';
+   fallbackBeep.current = audio;
+  }, []);
   const [selectedKey, setSelectedKey] = useState<KeyItem>(DEFAULT_KEY);
   const [selectedScale, setSelectedScale] = useState<ScaleItem>(DEFAULT_SCALE);
   const [notesInCurrentScale, setNotesInCurrentScale] = useState<number[]>([]);
@@ -213,13 +219,21 @@ export default function MelodySketcherPage() {
     setKeyboardStartMidiNote(((selectedOctaveBySlider + 1) * 12) + (selectedKey.rootMidiNote % 12));
   };
 
-  const handleNoteDown = useCallback((midiNote: number) => {
-    if (!audioContextInitialized) {
-      return;
+ const handleNoteDown = useCallback(async (midiNote: number) => {
+    if (!audioContextInitialized) return;
+ 
+    try {
+      // 通常の WebAudio 再生
+      playNote(midiNote, 100);
+    } catch (err) {
+      // 失敗時は <audio> タグでフォールバック再生
+      console.warn('Tone.js 再生に失敗 → Audioタグでフォールバック', err);
+      if (fallbackBeep.current) {
+        fallbackBeep.current.currentTime = 0;
+        fallbackBeep.current.play().catch(e => console.error('Audioタグ再生エラー', e));
+      }
     }
-    playNote(midiNote, 100);
   }, [audioContextInitialized, playNote]);
-
   const handleNoteUp = useCallback((midiNote: number) => {
     if (!audioContextInitialized) {
       return;
