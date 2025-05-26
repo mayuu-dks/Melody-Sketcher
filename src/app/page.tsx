@@ -130,6 +130,9 @@ export default function MelodySketcherPage() {
     try {
       await ensureAudioContextStartedAndPrime();
       if (Tone.context.state === 'running') {
+      fallbackBeep.current = new Audio('beep.wav');   
+      fallbackBeep.current.preload = 'auto';
+
         setAudioContextInitialized(true);
         toast({ title: "Audio Initialized", description: "Melody Sketcher is ready!" });
         console.log("Audio context successfully initialized and primed.");
