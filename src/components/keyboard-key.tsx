@@ -11,6 +11,8 @@ interface KeyboardKeyProps {
   onMouseUp: (midiNote: number) => void;
   onTouchStart: (midiNote: number) => void;
   onTouchEnd: (midiNote: number) => void;
+  onPointerDown?: (midiNote: number) => void;
+  onPointerUp?: (midiNote: number) => void;
   // slotBasisCount is no longer needed for width calculation here
 }
 
@@ -24,6 +26,8 @@ export const KeyboardKey: React.FC<KeyboardKeyProps> = ({
   onMouseUp,
   onTouchStart,
   onTouchEnd,
+  onPointerDown,
+  onPointerUp,
 }) => {
   const keyBaseClasses = 'relative flex items-end justify-center select-none h-full shrink-0 ring-1 ring-inset rounded-md';
   
@@ -48,6 +52,8 @@ export const KeyboardKey: React.FC<KeyboardKeyProps> = ({
       onMouseLeave={(e) => {e.preventDefault(); if(isPressed) onMouseUp(midiNote);}} 
       onTouchStart={(e) => { e.preventDefault(); onTouchStart(midiNote); }}
       onTouchEnd={(e) => { e.preventDefault(); onTouchEnd(midiNote); }}
+      onPointerDown={(e) => { e.preventDefault(); onPointerDown?.(midiNote); }}
+      onPointerUp  ={(e) => { e.preventDefault(); onPointerUp  ?. (midiNote); }}
       className={cn(
         keyBaseClasses,
         'flex-1', // Added flex-1 for responsive width
