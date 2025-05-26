@@ -216,6 +216,16 @@ export default function MelodySketcherPage() {
   };
 
   const handleNoteDown = useCallback(async (midiNote: number) => {
+  const isiOS = /iP(hone|od|ad)/.test(navigator.userAgent);
+  console.log("🔽 handleNoteDown:", { isiOS, current: fallbackBeep.current });
+  if (isiOS && fallbackBeep.current) {
+    console.log("🛠 iOS フェールバック 再生直前 readyState=", fallbackBeep.current.readyState);
+    fallbackBeep.current.currentTime = 0;
+    fallbackBeep.current.play()
+      .then(() => console.log("✅ フェールバック再生 成功"))
+      .catch(err => console.error("❌ フェールバック再生 エラー", err));
+    return;
+  }
     // ① まず iOS Safari なら即フェールバック
     const isiOS = /iP(hone|od|ad)/.test(navigator.userAgent);
     if (isiOS && fallbackBeep.current) {
