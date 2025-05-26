@@ -1,0 +1,27 @@
+cat << 'EOF' > docs/test.html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サイン波テスト</title>
+</head>
+<body>
+  <button id="btn">音を鳴らす</button>
+  <script>
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const btn = document.getElementById('btn');
+    async function startAudio(){
+      console.log('🎵 タップ検出');
+      await ctx.resume();
+      const osc = ctx.createOscillator();
+      osc.connect(ctx.destination);
+      osc.start();
+      setTimeout(()=>osc.stop(),200);
+    }
+    btn.addEventListener('touchstart', startAudio, { once: true });
+    btn.addEventListener('click',    startAudio, { once: true });
+  </script>
+</body>
+</html>
+EOF
