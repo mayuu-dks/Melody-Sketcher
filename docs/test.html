@@ -1,27 +1,35 @@
-cat << 'EOF' > docs/test.html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>サイン波テスト</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Audio Test</title>
 </head>
 <body>
   <button id="btn">音を鳴らす</button>
+  <pre id="log" style="white-space:pre-wrap"></pre>
   <script>
+    const log = msg => {
+      console.log(msg);
+      document.getElementById('log').textContent += msg + '\n';
+    };
     const ctx = new (window.AudioContext||window.webkitAudioContext)();
-    const btn = document.getElementById('btn');
-    async function startAudio(){
-      console.log('🎵 タップ検出');
+    async function startAudio(evt) {
+      log(`🤚 イベント: ${evt.type}`);
       await ctx.resume();
+      log(`⚙️ state: ${ctx.state}`);
       const osc = ctx.createOscillator();
       osc.connect(ctx.destination);
       osc.start();
-      setTimeout(()=>osc.stop(),200);
+      log('▶️ 再生開始');
+      setTimeout(()=>{
+        osc.stop();
+        log('⏹️ 再生停止');
+      }, 200);
     }
-    btn.addEventListener('touchstart', startAudio, { once: true });
-    btn.addEventListener('click',    startAudio, { once: true });
+    ;['pointerdown','touchstart','click'].forEach(ev =>
+      document.getElementById('btn').addEventListener(ev, startAudio, { once:true })
+    );
   </script>
 </body>
 </html>
-EOF
