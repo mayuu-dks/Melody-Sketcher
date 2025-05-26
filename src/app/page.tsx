@@ -219,22 +219,25 @@ export default function MelodySketcherPage() {
   };
 
    const handleNoteDown = useCallback(async (midiNote: number) => {
-   // まずここで呼び出しを確認
-    console.log("👉 handleNoteDown", {
-      midiNote,
-      isiOS: /iP(hone|od|ad)/.test(navigator.userAgent),
-    });
+  // ── iOS は <audio> でフェールバック ───────────
+  const isiOS = /iP(hone|od|ad)/.test(navigator.userAgent);
+  if (isiOS && fallbackBeep.current) {
+    fallbackBeep.current.currentTime = 0;
+    fallbackBeep.current.play().catch(console.error);
+    return;
+  }
 
-    // iOS 判定フェールバック
-    const isiOS = /iP(hone|od|ad)/.test(navigator.userAgent);
-     if (isiOS && fallbackBeep.current) {
-       fallbackBeep.current.currentTime = 0;
-       fallbackBeep.current.play().catch(console.error);
-       return;
-     }
+  // ── それ以外は Tone.js ─────────────────────
+  if (!audioContextInitialized) return;        // ボタン未押下なら何もしない
 
-    // AudioContext チェック／Tone.js 再生／catch フェールバック…
-  }, [audioContextInitialized, playNote]);
+  try {
+    playNote(midiNote, 100);                   // 通常再生
+  } catch (err) {
+    console.warn("Tone.js 再生失敗 → Audioタグでフォールバック", err);
+    fallbackBeep.current?.play().catch(console.error);
+  }
+// ★★★ コールバックはここで閉じる ★★★
+}, [audioContextInitialized, playNote]);
 
   const handleNoteUp = useCallback((midiNote: number) => {
     if (!audioContextInitialized) {
