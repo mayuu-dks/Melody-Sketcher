@@ -36,5 +36,22 @@
     btn.addEventListener('touchstart', playBeep, { once:true });
     btn.addEventListener('click',      playBeep, { once:true });
   </script>
+<!-- 既存のコードの下に続けて貼り付け -->
+<hr>
+<button id="audioBtn" style="font-size:1.1em;padding:0.8em;">🔊 Audioタグで鳴らす</button>
+<audio id="beep" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+<script>
+  const audioBtn = document.getElementById('audioBtn');
+  const beep    = document.getElementById('beep');
+  audioBtn.addEventListener('click', async () => {
+    try {
+      await beep.play();
+      console.log('🎵 Audioタグ再生 OK');
+    } catch(err) {
+      console.error('❌ Audioタグ再生エラー', err);
+    }
+  });
+</script>
+
 </body>
 </html>
