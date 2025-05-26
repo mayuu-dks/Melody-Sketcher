@@ -302,11 +302,7 @@ export default function MelodySketcherPage() {
       preload="auto"
       style={{ display: "none" }}
     />
-    {/* …既存の VirtualKeyboard など */}
-    <VirtualKeyboard
-      /* 省略 */
-    />
-    {/* … */}
+   
         {!isClient ? (
           <div className="flex justify-center items-center h-64">
             <p className="text-muted-foreground">Loading Melody Sketcher...</p>
