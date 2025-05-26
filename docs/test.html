@@ -3,33 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Audio Test</title>
+  <title>Audio Beep Test</title>
 </head>
 <body>
-  <button id="btn">音を鳴らす</button>
-  <pre id="log" style="white-space:pre-wrap"></pre>
+  <button id="btn" style="font-size:1.2em;padding:1em;">🔊 1秒ビープ再生</button>
+  <pre id="log" style="white-space:pre-wrap;margin-top:1em;"></pre>
   <script>
-    const log = msg => {
-      console.log(msg);
-      document.getElementById('log').textContent += msg + '\n';
+    const log = m => {
+      console.log(m);
+      document.getElementById('log').textContent += m + "\n";
     };
     const ctx = new (window.AudioContext||window.webkitAudioContext)();
-    async function startAudio(evt) {
-      log(`🤚 イベント: ${evt.type}`);
+    async function playBeep(evt) {
+      log(`▶️ イベント: ${evt.type}`);
       await ctx.resume();
       log(`⚙️ state: ${ctx.state}`);
+      // Oscillator + GainNode
       const osc = ctx.createOscillator();
-      osc.connect(ctx.destination);
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 440;       // A4
+      gain.gain.setValueAtTime(1, ctx.currentTime);
+      osc.connect(gain).connect(ctx.destination);
       osc.start();
-      log('▶️ 再生開始');
+      log("🔔 再生中...");
       setTimeout(()=>{
         osc.stop();
-        log('⏹️ 再生停止');
-      }, 200);
+        log("⏹️ 停止");
+      }, 1000);
     }
-    ;['pointerdown','touchstart','click'].forEach(ev =>
-      document.getElementById('btn').addEventListener(ev, startAudio, { once:true })
-    );
+    const btn = document.getElementById('btn');
+    btn.addEventListener('touchstart', playBeep, { once:true });
+    btn.addEventListener('click',      playBeep, { once:true });
   </script>
 </body>
 </html>
