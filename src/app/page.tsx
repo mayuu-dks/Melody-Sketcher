@@ -215,19 +215,24 @@ export default function MelodySketcherPage() {
     setKeyboardStartMidiNote(((selectedOctaveBySlider + 1) * 12) + (selectedKey.rootMidiNote % 12));
   };
 
- const handleNoteDown = useCallback(async (midiNote: number) => {
+  const handleNoteDown = useCallback(async (midiNote: number) => {
+    // ① まず iOS Safari なら即フェールバック
+    const isiOS = /iP(hone|od|ad)/.test(navigator.userAgent);
+    if (isiOS && fallbackBeep.current) {
+      fallbackBeep.current.currentTime = 0;
+      fallbackBeep.current.play().catch(console.error);
+      return;
+    }
+ 
+    // ② それ以外は AudioContext の初期化を待つ
     if (!audioContextInitialized) return;
  
+    // ③ 通常の WebAudio 再生
     try {
-      // 通常の WebAudio 再生
       playNote(midiNote, 100);
     } catch (err) {
-      // 失敗時は <audio> タグでフォールバック再生
-      console.warn('Tone.js 再生に失敗 → Audioタグでフォールバック', err);
-      if (fallbackBeep.current) {
-        fallbackBeep.current.currentTime = 0;
-        fallbackBeep.current.play().catch(e => console.error('Audioタグ再生エラー', e));
-      }
+      console.warn("Tone.js 再生失敗 → Audioタグでフォールバック", err);
+      fallbackBeep.current?.play().catch(console.error);
     }
   }, [audioContextInitialized, playNote]);
   const handleNoteUp = useCallback((midiNote: number) => {
