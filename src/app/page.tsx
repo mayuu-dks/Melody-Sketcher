@@ -31,7 +31,7 @@ export default function MelodySketcherPage() {
 // フェールバック用ビープ音を用意
  const fallbackBeep = useRef<HTMLAudioElement>();
  useEffect(() => {
-   const audio = new Audio('/beep.wav');  // public フォルダ直下に配置しておく
+   const audio = new Audio('beep.wav');  // public フォルダ直下に配置しておく
    audio.preload = 'auto';
    fallbackBeep.current = audio;
   }, []);
