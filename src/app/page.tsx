@@ -30,12 +30,7 @@ export default function MelodySketcherPage() {
   } = useMidiPlayer();
 // フェールバック用ビープ音を用意
  const fallbackBeep = useRef<HTMLAudioElement>();
- useEffect(() => {
-  const base = window.location.origin + window.location.pathname;
-  const audio = new Audio(base + 'beep.wav');
-   audio.preload = 'auto';
-   fallbackBeep.current = audio;
-  }, []);
+
   const [selectedKey, setSelectedKey] = useState<KeyItem>(DEFAULT_KEY);
   const [selectedScale, setSelectedScale] = useState<ScaleItem>(DEFAULT_SCALE);
   const [notesInCurrentScale, setNotesInCurrentScale] = useState<number[]>([]);
@@ -300,7 +295,7 @@ export default function MelodySketcherPage() {
  {/* フェールバック用ビープ音を先読み */}
     <audio
       ref={fallbackBeep}
-      src="/beep.wav"
+      src="beep.wav"
       preload="auto"
       style={{ display: "none" }}
     />
