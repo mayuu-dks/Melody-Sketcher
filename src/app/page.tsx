@@ -215,32 +215,23 @@ export default function MelodySketcherPage() {
     setKeyboardStartMidiNote(((selectedOctaveBySlider + 1) * 12) + (selectedKey.rootMidiNote % 12));
   };
 
-  const handleNoteDown = useCallback(async (midiNote: number) => {
-  console.log("👉 handleNoteDown called for midiNote =", midiNote);
-  const isiOS = /iP(hone|od|ad)/.test(navigator.userAgent);
-  console.log("   isiOS:", isiOS, "fallbackBeep:", fallbackBeep.current);
-  if (isiOS && fallbackBeep.current) {
-    console.log("   💡 iOS フェールバック再生直前 readyState =", fallbackBeep.current.readyState);
-    fallbackBeep.current.currentTime = 0;
-    fallbackBeep.current.play()
-      .then(() => console.log("   ✅ フェールバック再生 成功"))
-      .catch(err => console.error("   ❌ フェールバック再生 エラー", err));
-    return;
-  }
+   const handleNoteDown = useCallback(async (midiNote: number) => {
+   // まずここで呼び出しを確認
+    console.log("👉 handleNoteDown", {
+      midiNote,
+      isiOS: /iP(hone|od|ad)/.test(navigator.userAgent),
+    });
 
-  if (!audioContextInitialized) {
-    console.log("   ⚠️ AudioContext 未初期化のため中断");
-    return;
-  }
+    // iOS 判定フェールバック
+    const isiOS = /iP(hone|od|ad)/.test(navigator.userAgent);
+     if (isiOS && fallbackBeep.current) {
+       fallbackBeep.current.currentTime = 0;
+       fallbackBeep.current.play().catch(console.error);
+       return;
+     }
 
-  try {
-    console.log("   🎹 Tone.js で再生試行");
-    playNote(midiNote, 100);
-  } catch (err) {
-    console.warn("   ⚠️ Tone.js 再生失敗 → Audioタグでフォールバック", err);
-    fallbackBeep.current?.play().catch(e => console.error("   ❌ Audioタグ再生エラー", e));
-  }
-}, [audioContextInitialized, playNote]);
+    // AudioContext チェック／Tone.js 再生／catch フェールバック…
+  }, [audioContextInitialized, playNote]);
 
   const handleNoteUp = useCallback((midiNote: number) => {
     if (!audioContextInitialized) {
