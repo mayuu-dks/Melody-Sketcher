@@ -297,6 +297,18 @@ export default function MelodySketcherPage() {
       </header>
 
       <main className="w-full max-w-5xl xl:max-w-7xl space-y-4 md:space-y-6">
+ {/* フェールバック用ビープ音を先読み */}
+    <audio
+      ref={fallbackBeep}
+      src="/beep.wav"
+      preload="auto"
+      style={{ display: "none" }}
+    />
+    {/* …既存の VirtualKeyboard など */}
+    <VirtualKeyboard
+      /* 省略 */
+    />
+    {/* … */}
         {!isClient ? (
           <div className="flex justify-center items-center h-64">
             <p className="text-muted-foreground">Loading Melody Sketcher...</p>
