@@ -139,6 +139,9 @@ export const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
       onMouseUp={handleInteractionEnd}
       onTouchStart={handleInteractionStart}
       onTouchEnd={handleInteractionEnd}
+      onPointerDown={(e) => { e.preventDefault(); onNoteDown?.(keyDetail.midiNote); console.log('👉 pointerdown', keyDetail.midiNote); }}
+      onPointerUp  ={(e) => { e.preventDefault(); onNoteUp  ?. (keyDetail.midiNote); console.log('👉 pointerup',   keyDetail.midiNote); }}
+
     />
   );
 
