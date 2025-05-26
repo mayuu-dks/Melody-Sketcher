@@ -216,35 +216,32 @@ export default function MelodySketcherPage() {
   };
 
   const handleNoteDown = useCallback(async (midiNote: number) => {
+  console.log("👉 handleNoteDown called for midiNote =", midiNote);
   const isiOS = /iP(hone|od|ad)/.test(navigator.userAgent);
-  console.log("🔽 handleNoteDown:", { isiOS, current: fallbackBeep.current });
+  console.log("   isiOS:", isiOS, "fallbackBeep:", fallbackBeep.current);
   if (isiOS && fallbackBeep.current) {
-    console.log("🛠 iOS フェールバック 再生直前 readyState=", fallbackBeep.current.readyState);
+    console.log("   💡 iOS フェールバック再生直前 readyState =", fallbackBeep.current.readyState);
     fallbackBeep.current.currentTime = 0;
     fallbackBeep.current.play()
-      .then(() => console.log("✅ フェールバック再生 成功"))
-      .catch(err => console.error("❌ フェールバック再生 エラー", err));
+      .then(() => console.log("   ✅ フェールバック再生 成功"))
+      .catch(err => console.error("   ❌ フェールバック再生 エラー", err));
     return;
   }
-    // ① まず iOS Safari なら即フェールバック
-    const isiOS = /iP(hone|od|ad)/.test(navigator.userAgent);
-    if (isiOS && fallbackBeep.current) {
-      fallbackBeep.current.currentTime = 0;
-      fallbackBeep.current.play().catch(console.error);
-      return;
-    }
- 
-    // ② それ以外は AudioContext の初期化を待つ
-    if (!audioContextInitialized) return;
- 
-    // ③ 通常の WebAudio 再生
-    try {
-      playNote(midiNote, 100);
-    } catch (err) {
-      console.warn("Tone.js 再生失敗 → Audioタグでフォールバック", err);
-      fallbackBeep.current?.play().catch(console.error);
-    }
-  }, [audioContextInitialized, playNote]);
+
+  if (!audioContextInitialized) {
+    console.log("   ⚠️ AudioContext 未初期化のため中断");
+    return;
+  }
+
+  try {
+    console.log("   🎹 Tone.js で再生試行");
+    playNote(midiNote, 100);
+  } catch (err) {
+    console.warn("   ⚠️ Tone.js 再生失敗 → Audioタグでフォールバック", err);
+    fallbackBeep.current?.play().catch(e => console.error("   ❌ Audioタグ再生エラー", e));
+  }
+}, [audioContextInitialized, playNote]);
+
   const handleNoteUp = useCallback((midiNote: number) => {
     if (!audioContextInitialized) {
       return;
