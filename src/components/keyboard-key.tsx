@@ -52,6 +52,17 @@ export const KeyboardKey: React.FC<KeyboardKeyProps> = ({
       onMouseLeave={(e) => {e.preventDefault(); if(isPressed) onMouseUp(midiNote);}} 
       onTouchStart={(e) => { e.preventDefault(); onTouchStart(midiNote); }}
       onTouchEnd={(e) => { e.preventDefault(); onTouchEnd(midiNote); }}
+ /* ――― デバッグログを追加 ――― */
+  onPointerDown={(e)=>{ 
+    e.preventDefault();
+    console.log('🔹 KEY pointerdown', midiNote);  // ←★ ここで必ず出るはず
+    onPointerDown?.(midiNote);
+  }}
+  onPointerUp={(e)=>{ 
+    e.preventDefault();
+    console.log('🔹 KEY pointerup', midiNote);
+    onPointerUp?.(midiNote);
+  }}
       onPointerDown={(e) => { e.preventDefault(); onPointerDown?.(midiNote); }}
       onPointerUp  ={(e) => { e.preventDefault(); onPointerUp  ?. (midiNote); }}
       className={cn(
