@@ -27,10 +27,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-{/* --- Eruda Dev Console (only for debug) ---------------- */}
- <script src="https://cdn.jsdelivr.net/npm/eruda@3"></script>
- <script dangerouslySetInnerHTML={{ __html: "eruda.init();" }} />
-
+   {/* --- Eruda Dev Console (debug only) ------------------ */}
+    <Script
+      src="https://cdn.jsdelivr.net/npm/eruda@3"
+      strategy="afterInteractive"
+      onLoad={() => {
+        // @ts-ignore
+        window.eruda && window.eruda.init();
+      }}
+    />
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
         <Toaster />
