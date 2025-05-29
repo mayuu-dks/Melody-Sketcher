@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
    {/* --- Eruda Dev Console (debug only) ------------------ */}
     <Script
-      src="https://cdn.jsdelivr.net/npm/eruda@3"
+      src="https://cdn.jsdelivr.net/npm/eruda@3/dist/eruda.min.js"
       strategy="afterInteractive"
       onLoad={() => {
         // @ts-ignore
