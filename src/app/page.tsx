@@ -126,6 +126,7 @@ export default function MelodySketcherPage() {
   };
 
   const handleInitializeAudio = useCallback(async () => {
+debugger;
     if (audioContextInitialized) return;
     try {
       await ensureAudioContextStartedAndPrime();
@@ -138,7 +139,7 @@ export default function MelodySketcherPage() {
 
   // 最初に成功したものを fallbackBeep.current に入れる
   for (const src of srcList) {
-    console.log('🔍 try', src);
+    console.error('🔍 try', src);
     const audio = new Audio(src);
     audio.preload = 'auto';
 audio.style.display = 'none';
@@ -160,7 +161,7 @@ document.body.appendChild(audio);
     });
 
     if (ok) {
-      console.log('✅ loaded', src);
+      console.error('✅ loaded', src);
       fallbackBeep.current = audio;
       break;
     }
