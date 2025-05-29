@@ -1,43 +1,24 @@
-"use client";
-import type {Metadata} from 'next';
-import { Geist, Geist_Mono } from 'next/font/google'; // Corrected import for Geist font
-import './globals.css';
-import { Toaster } from "@/components/ui/toaster"; // Added Toaster for notifications
-import Script from "next/script";
+// src/app/layout.tsx  ──★ Server Component (← "use client" なし)
+import type { Metadata } from "next";
+import { Geist_Sans, Geist_Mono } from "next/font/google";
+import { Toaster } from "@/components/ui/toaster";
+import DevToolsScript from "@/components/DevToolsScript";   // ← 追加
 
-
-const geistSans = Geist({ // Corrected instantiation
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({ // Corrected instantiation
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
+/* ここはそのまま */
 export const metadata: Metadata = {
-  title: 'Melody Sketcher',
-  description: 'A web-based MIDI keyboard with recording and scale-locking features.',
+  title: "Melody Sketcher",
+  description: "A web-based MIDI keyboard with recording and scale-locking features.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+const geistSans = Geist_Sans({ variable: "--font-geist-sans", subsets: ["latin"] });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-   {/* --- Eruda Dev Console (debug only) ------------------ */}
-    <Script
-      src="https://cdn.jsdelivr.net/npm/eruda@3/dist/eruda.min.js"
-      strategy="afterInteractive"
-      onLoad={() => {
-        // @ts-ignore
-        window.eruda && window.eruda.init();
-      }}
-    />
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {/* ← Client Component をここで呼び出す */}
+        <DevToolsScript />
         {children}
         <Toaster />
       </body>
