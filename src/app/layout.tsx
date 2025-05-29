@@ -1,6 +1,7 @@
 // src/app/layout.tsx  ──★ Server Component (← "use client" なし)
 import type { Metadata } from "next";
-import { Inter, Roboto_Mono } from 'next/font/google';
+import { Inter } from "next/font/google";
+const inter = Inter({ subsets: ["latin"] });
 import { Toaster } from "@/components/ui/toaster";
 import DevToolsScript from "@/components/DevToolsScript";   // ← 追加
 
@@ -10,12 +11,10 @@ export const metadata: Metadata = {
   description: "A web-based MIDI keyboard with recording and scale-locking features.",
 };
 
-const geistSans = Geist_Sans({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+     <html lang="en" className={inter.className}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {/* ← Client Component をここで呼び出す */}
         <DevToolsScript />
