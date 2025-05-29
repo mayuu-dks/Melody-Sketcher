@@ -68,6 +68,12 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   onTogglePianoRoll,
   isPianoRollVisible,
 }) => {
+ /* ★★★ ここに追加 ★★★ */
+  const handleInitClick = () => {
+    console.error("🟢 CONTROL PANEL CLICK"); // 本番でも消えない
+    debugger;                                // ボタン押下で必ず停止
+    onInitializeAudio();                     // 元の初期化処理
+  };
   const isOctaveSliderDisabled = !audioInitialized || (isPianoRollVisible && hasRecording);
 
   return (
