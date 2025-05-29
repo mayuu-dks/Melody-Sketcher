@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Audio preload test</title>
+<button id="btn">preload + play</button>
+<script>
+  document.getElementById('btn').onclick = async () => {
+    const src = '/Melody-Sketcher/beep.wav';   // wav / m4a どちらでも
+    console.error('🔍 create', src);
+
+    const a = new Audio(src);
+    a.preload = 'auto';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+
+    a.addEventListener('canplaythrough', () => console.error('✅ canplay'));
+    a.addEventListener('error',        () => console.error('🟥 error', a.error));
+    a.load();                       // ここで必ず Network に GET
+
+    try { await a.play();           // 再生してみる
+    } catch(e) { console.error('play error', e); }
+  };
+</script>
