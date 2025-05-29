@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-<script src="/eruda-init.js" defer></script>
+<script src="./eruda-init.js" defer></script>
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
