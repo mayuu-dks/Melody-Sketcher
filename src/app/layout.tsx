@@ -25,7 +25,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-<script src="/Melody-Sketcher/eruda-init.js" defer></script>
+{/* --- Eruda Dev Console (only for debug) ---------------- */}
+ <script src="https://cdn.jsdelivr.net/npm/eruda@3"></script>
+ <script dangerouslySetInnerHTML={{ __html: "eruda.init();" }} />
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
