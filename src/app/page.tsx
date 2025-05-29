@@ -130,28 +130,44 @@ export default function MelodySketcherPage() {
     try {
       await ensureAudioContextStartedAndPrime();
       if (Tone.context.state === 'running') {
-       // ① m4a を優先してロード
-  fallbackBeep.current = new Audio('/Melody-Sketcher/beep.m4a');
-  fallbackBeep.current.preload = 'auto';
-  fallbackBeep.current.load();                               // ← 先にロード
+  // ---- 1. m4a を試す ---------------------------------
+  const srcList = [
+    '/Melody-Sketcher/beep.m4a',   // ① m4a
+    '/Melody-Sketcher/beep.wav'    // ② wav (fallback)
+  ];
 
-  // ② ロード結果をログ
-  fallbackBeep.current.addEventListener('canplaythrough', () =>
-    console.log('✅ m4a loaded'));
-  fallbackBeep.current.addEventListener('error', () => {
-    console.warn('🟥 m4a failed, retry wav');
-    // ③ 失敗したら wav を再試行
-    fallbackBeep.current = new Audio('/Melody-Sketcher/beep.wav');
-    fallbackBeep.current.preload = 'auto';
-    fallbackBeep.current.load();
-    fallbackBeep.current.addEventListener('canplaythrough', () =>
-      console.log('✅ wav loaded'));
-    fallbackBeep.current.addEventListener('error', () =>
-      console.error('🟥 wav load error', fallbackBeep.current?.error)
- );
-  });
- }
- console.log('🟡 load() called');  
+  // 最初に成功したものを fallbackBeep.current に入れる
+  for (const src of srcList) {
+    console.log('🔍 try', src);
+    const audio = new Audio(src);
+    audio.preload = 'auto';
+
+    // ↓↓↓ 「この 1 行」だけで即 GET が飛びます
+    audio.load();
+
+    // イベントを Promise 化して待つ
+    const ok = await new Promise<boolean>((resolve) => {
+      const timer = setTimeout(() => resolve(false), 1500);   // 1.5 秒待って諦め
+      audio.addEventListener('canplaythrough', () => {
+        clearTimeout(timer);
+        resolve(true);
+      });
+      audio.addEventListener('error', (e) => {
+        console.warn('🟥 error', src, audio.error);
+      });
+    });
+
+    if (ok) {
+      console.log('✅ loaded', src);
+      fallbackBeep.current = audio;
+      break;
+    }
+  }
+
+  if (!fallbackBeep.current) {
+    console.error('🆘 どのフォーマットもロード出来ませんでした');
+  }
+
         setAudioContextInitialized(true);
 
         toast({ title: "Audio Initialized", description: "Melody Sketcher is ready!" });
