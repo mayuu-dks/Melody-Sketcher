@@ -45,6 +45,7 @@ interface ControlPanelProps {
 }
 
 export const ControlPanel: React.FC<ControlPanelProps> = ({
+const hiddenBeep = useRef<HTMLAudioElement | null>(null);
   isRecording,
   onRecordToggle,
   onPlay,
@@ -68,7 +69,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   onTogglePianoRoll,
   isPianoRollVisible,
 }) => {
-const hiddenBeep = useRef<HTMLAudioElement | null>(null);
+
 <audio
   ref={hiddenBeep}
   src="/Melody-Sketcher/beep.wav"   // ← docs のパスに合わせる
