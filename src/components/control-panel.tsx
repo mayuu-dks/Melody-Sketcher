@@ -68,12 +68,20 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   onTogglePianoRoll,
   isPianoRollVisible,
 }) => {
- /* ★★★ ここに追加 ★★★ */
-  const handleInitClick = () => {
-    console.error("🟢 CONTROL PANEL CLICK"); // 本番でも消えない
-    debugger;                                // ボタン押下で必ず停止
-    onInitializeAudio();                     // 元の初期化処理
-  };
+const hiddenBeep = useRef<HTMLAudioElement | null>(null);
+<audio
+  ref={hiddenBeep}
+  src="/Melody-Sketcher/beep.wav"   // ← docs のパスに合わせる
+  preload="auto"
+  playsInline                      // iOS向け
+  style={{ width: 1, height: 1, opacity: 0 }}
+/>
+
+ const handleInitClick = () => {
+  console.error("🟢 CONTROL PANEL CLICK");   // Eruda で必ず見える
+  hiddenBeep.current?.play().catch(console.error); // iOS の音声許可
+  onInitializeAudio();                           // 元々の初期化処理
+};
   const isOctaveSliderDisabled = !audioInitialized || (isPianoRollVisible && hasRecording);
 
   return (
