@@ -141,6 +141,8 @@ export default function MelodySketcherPage() {
     console.log('🔍 try', src);
     const audio = new Audio(src);
     audio.preload = 'auto';
+audio.style.display = 'none';
+document.body.appendChild(audio);
 
     // ↓↓↓ 「この 1 行」だけで即 GET が飛びます
     audio.load();
