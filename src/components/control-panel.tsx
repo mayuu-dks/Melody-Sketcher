@@ -1,6 +1,6 @@
 "use client";
 
-import type React from 'react';
+import React, { useRef } from "react";
 import { CircleIcon, PlayIcon, SquareIcon, DownloadIcon, Music3Icon, KeyIcon, Trash2Icon, Volume2, BellIcon, BellOffIcon, Edit3Icon, XIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -45,7 +45,6 @@ interface ControlPanelProps {
 }
 
 export const ControlPanel: React.FC<ControlPanelProps> = ({
-const hiddenBeep = useRef<HTMLAudioElement | null>(null);
   isRecording,
   onRecordToggle,
   onPlay,
@@ -69,7 +68,7 @@ const hiddenBeep = useRef<HTMLAudioElement | null>(null);
   onTogglePianoRoll,
   isPianoRollVisible,
 }) => {
-
+const hiddenBeep = useRef<HTMLAudioElement | null>(null);
 <audio
   ref={hiddenBeep}
   src="/Melody-Sketcher/beep.wav"   // ← docs のパスに合わせる
