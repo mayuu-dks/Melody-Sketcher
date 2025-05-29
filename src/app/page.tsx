@@ -130,7 +130,7 @@ export default function MelodySketcherPage() {
     try {
       await ensureAudioContextStartedAndPrime();
       if (Tone.context.state === 'running') {
-      fallbackBeep.current = new Audio('beep.wav');   
+      fallbackBeep.current = new Audio('/Melody-Sketcher/beep.wav');   
       fallbackBeep.current.preload = 'auto';
 
         setAudioContextInitialized(true);
