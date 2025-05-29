@@ -1,3 +1,4 @@
+"use client";
 
 import type React from 'react';
 import { CircleIcon, PlayIcon, SquareIcon, DownloadIcon, Music3Icon, KeyIcon, Trash2Icon, Volume2, BellIcon, BellOffIcon, Edit3Icon, XIcon } from 'lucide-react';
@@ -76,7 +77,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
       </CardHeader>
       <CardContent className="space-y-6">
         {!audioInitialized && (
-           <Button onClick={onInitializeAudio} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" size="lg">
+           <Button onClick={handleInitClick} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" size="lg">
             <Volume2 className="mr-2 h-5 w-5" /> Initialize Audio & Start
           </Button>
         )}
