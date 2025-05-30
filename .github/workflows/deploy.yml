@@ -18,7 +18,7 @@ jobs:
 
       # ② 依存インストール & Next.js ビルド＋書き出し
       - run: npm ci
-      - run: npm run build && npm run export      # docs/ に静的ファイル生成
+      - run: npm run deploy      # docs/ に静的ファイル生成
 
       # Jekyll を無効化（.nojekyll が無いと CSS が壊れる）
       - run: touch docs/.nojekyll
