@@ -1,0 +1,42 @@
+name: Build and Deploy to Pages
+
+on:
+  push:
+    branches: [ master ]        # master に push したら毎回動く
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # ① Node をセットアップ
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # ② 依存インストール & Next.js ビルド＋書き出し
+      - run: npm ci
+      - run: npm run deploy      # docs/ に静的ファイル生成
+
+      # Jekyll を無効化（.nojekyll が無いと CSS が壊れる）
+      - run: touch docs/.nojekyll
+
+      # ③ docs フォルダを GitHub Pages 用アーティファクトに
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
